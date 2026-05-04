@@ -23,4 +23,24 @@ final class UserLookup
 
         return $row === false ? null : $row;
     }
+
+    /**
+     * Return up to $limit users whose name starts with $prefix.
+     *
+     * @return list<array{id:int,email:string,name:string}>
+     */
+    public function searchByNamePrefix(string $prefix, int $limit = 5): array
+    {
+        $safeLimit = max(1, min($limit, 20));
+        $stmt = $this->pdo->prepare(
+            'SELECT id, email, name FROM users WHERE name LIKE :prefix ORDER BY name ASC LIMIT :limit'
+        );
+        $stmt->bindValue(':prefix', $prefix . '%', PDO::PARAM_STR);
+        $stmt->bindValue(':limit', $safeLimit, PDO::PARAM_INT);
+        $stmt->execute();
+
+        /** @var list<array{id:int,email:string,name:string}> $rows */
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $rows;
+    }
 }

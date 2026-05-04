@@ -46,4 +46,20 @@ if (preg_match('#^/users/(\d+)$#', (string) $path, $m)) {
     exit;
 }
 
+if ($path === '/users') {
+    $queryParams = [];
+    parse_str((string) parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY), $queryParams);
+    $prefix = isset($queryParams['prefix']) ? trim((string) $queryParams['prefix']) : '';
+    $limit = isset($queryParams['limit']) ? (int) $queryParams['limit'] : 5;
+
+    if ($prefix === '' || strlen($prefix) < 2) {
+        (new JsonResponse(400, ['error' => 'prefix_too_short']))->send();
+        exit;
+    }
+
+    $users = (new UserLookup($pdo))->searchByNamePrefix($prefix, $limit);
+    (new JsonResponse(200, ['users' => $users]))->send();
+    exit;
+}
+
 (new JsonResponse(404, ['error' => 'not_found']))->send();
