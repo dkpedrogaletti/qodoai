@@ -1,0 +1,10 @@
+# Optional repo-level hints for PR-Agent (see https://github.com/qodo-ai/pr-agent )
+# Align automated review with how this demo models a typical PHP API + Next.js app.
+
+[pr_reviewer]
+extra_instructions = """
+Stack: PHP 8+ (JSON HTTP API) and Next.js App Router (TypeScript).
+Emphasize API input validation, authz boundaries, SQL parameterization, and error handling without leaking internals.
+For Next.js: RSC boundaries, safe env usage (never ship secrets via NEXT_PUBLIC_*), and predictable data fetching/caching.
+Suggest tests when logic, contracts, or security-relevant behavior changes.
+"""
