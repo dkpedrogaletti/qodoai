@@ -11,24 +11,36 @@ async function fetchHealth(): Promise<{ ok?: boolean }> {
 
 type User = { id: number; email: string; name: string };
 
-async function fetchUsers(prefix: string): Promise<User[]> {
+type UsersResponse = {
+  users: User[];
+  has_more: boolean;
+  visible_count: number;
+};
+
+async function fetchUsers(prefix: string): Promise<UsersResponse> {
   const base = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://127.0.0.1:8080';
   try {
     const url = new URL('/users', base);
     url.searchParams.set('prefix', prefix);
-    url.searchParams.set('limit', '5');
+    url.searchParams.set('limit', '3');
+    url.searchParams.set('fields', 'public');
     const res = await fetch(url.toString(), { next: { revalidate: 30 } });
-    if (!res.ok) return [];
-    const data = (await res.json()) as { users?: User[] };
-    return data.users ?? [];
+    if (!res.ok) return { users: [], has_more: false, visible_count: 0 };
+    const data = (await res.json()) as Partial<UsersResponse>;
+    return {
+      users: data.users ?? [],
+      has_more: data.has_more ?? false,
+      visible_count: data.visible_count ?? (data.users?.length ?? 0),
+    };
   } catch {
-    return [];
+    return { users: [], has_more: false, visible_count: 0 };
   }
 }
 
 export default async function HomePage() {
   const health = await fetchHealth();
-  const users = await fetchUsers('Al');
+  const usersResult = await fetchUsers('Al');
+  const users = usersResult.users;
 
   return (
     <main style={{ padding: '2rem', maxWidth: 720 }}>
@@ -47,13 +59,19 @@ export default async function HomePage() {
         {users.length === 0 ? (
           <p>No users found. Seed the DB to test this endpoint.</p>
         ) : (
-          <ul>
-            {users.map((user) => (
-              <li key={user.id}>
-                {user.name} - {user.email}
-              </li>
-            ))}
-          </ul>
+          <>
+            <p>
+              Showing {usersResult.visible_count} user(s) in public mode (masked emails)
+              {usersResult.has_more ? ' - more matches available' : ''}.
+            </p>
+            <ul>
+              {users.map((user) => (
+                <li key={user.id}>
+                  {user.name} - {user.email}
+                </li>
+              ))}
+            </ul>
+          </>
         )}
       </section>
     </main>

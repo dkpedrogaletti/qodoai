@@ -7,6 +7,12 @@ This repo intentionally mirrors a common company layout:
 - **`backend/`** — small PHP 8 HTTP API (`strict_types`, parameterized SQL)
 - **`frontend/`** — Next.js App Router sample that reads `NEXT_PUBLIC_API_BASE_URL`
 
+### Demo endpoint behavior
+
+- `GET /users?prefix=Al&limit=3&fields=public` returns masked emails and pagination metadata.
+- `fields=full` requires `X-Demo-Token` to match `DEMO_ADMIN_TOKEN`; otherwise API returns `403`.
+- This intentionally creates a review surface for Gemini around auth boundaries and sensitive-data exposure.
+
 ## Enable PR-Agent on GitHub
 
 1. **Push this repo** to GitHub (or fork it inside your org).
