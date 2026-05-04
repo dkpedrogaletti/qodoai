@@ -19,6 +19,7 @@ This repo intentionally mirrors a common company layout:
 2. Under **Settings → Secrets and variables → Actions**, create a repository secret:
    - **Name:** `GEMINI_API_KEY`
    - **Value:** a Google AI Studio Gemini API key (the workflow uses `GOOGLE_AI_STUDIO.GEMINI_API_KEY`).
+   - Workflow default model is `gemini/gemini-2.0-flash` with fallback to `gemini/gemini-1.5-pro-latest`.
 3. Merge **`.github/workflows/pr_agent.yml`** to your default branch.
 4. Open a **pull request**. On open / reopen / ready for review you should see the bot publish:
    - a **description** walkthrough (**`/describe`**),

@@ -20,9 +20,9 @@ jobs:
         uses: qodo-ai/pr-agent@v0.34.3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # Use Gemini to avoid OpenAI quota/billing blockers in demos
-          config.model: "gemini/gemini-1.5-flash"
-          config.fallback_models: '["gemini/gemini-1.5-flash"]'
+          # Use currently available Gemini models (1.5-flash can 404 on newer endpoints)
+          config.model: "gemini/gemini-2.0-flash"
+          config.fallback_models: '["gemini/gemini-2.0-flash","gemini/gemini-1.5-pro-latest"]'
           GOOGLE_AI_STUDIO.GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           # Strong demo defaults: first comment explains the PR, reviews, and suggests improvements
           github_action_config.auto_review: "true"
