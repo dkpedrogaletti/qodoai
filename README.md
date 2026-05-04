@@ -11,8 +11,8 @@ This repo intentionally mirrors a common company layout:
 
 1. **Push this repo** to GitHub (or fork it inside your org).
 2. Under **Settings → Secrets and variables → Actions**, create a repository secret:
-   - **Name:** `OPENAI_KEY`  
-   - **Value:** your provider key (same variable name as in the [official install guide](https://github.com/qodo-ai/pr-agent/blob/main/docs/docs/installation/github.md); you can also point PR-Agent at other models via workflow `env`).
+   - **Name:** `GEMINI_API_KEY`
+   - **Value:** a Google AI Studio Gemini API key (the workflow uses `GOOGLE_AI_STUDIO.GEMINI_API_KEY`).
 3. Merge **`.github/workflows/pr_agent.yml`** to your default branch.
 4. Open a **pull request**. On open / reopen / ready for review you should see the bot publish:
    - a **description** walkthrough (**`/describe`**),
