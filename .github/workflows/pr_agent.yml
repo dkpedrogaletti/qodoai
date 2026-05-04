@@ -21,6 +21,10 @@ jobs:
         env:
           OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # PR-Agent v0.34 defaults to GPT-5-class models (see pr_agent settings/configuration.toml).
+          # Override here so a normal OpenAI billing tier / quota works without surprises.
+          config.model: "gpt-4o-mini"
+          config.fallback_models: '["gpt-4o-mini","gpt-4o"]'
           # Strong demo defaults: first comment explains the PR, reviews, and suggests improvements
           github_action_config.auto_review: "true"
           github_action_config.auto_describe: "true"
