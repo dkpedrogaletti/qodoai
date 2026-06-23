@@ -7,25 +7,29 @@ This repo intentionally mirrors a common company layout:
 - **`backend/`** — small PHP 8 HTTP API (`strict_types`, parameterized SQL)
 - **`frontend/`** — Next.js App Router sample that reads `NEXT_PUBLIC_API_BASE_URL`
 
-## Enable PR-Agent on GitHub
+### Demo endpoint behavior
+
+- `GET /users?prefix=Al&limit=3&fields=public` returns masked emails and pagination metadata.
+- `fields=full` requires `X-Demo-Token` to match `DEMO_ADMIN_TOKEN`; otherwise API returns `403`.
+- This intentionally creates a review surface around auth boundaries and sensitive-data exposure.
+
+## Enable Qodo GitHub App (hosted mode)
 
 1. **Push this repo** to GitHub (or fork it inside your org).
-2. Under **Settings → Secrets and variables → Actions**, create a repository secret:
-   - **Name:** `GEMINI_API_KEY`
-   - **Value:** a Google AI Studio Gemini API key (the workflow uses `GOOGLE_AI_STUDIO.GEMINI_API_KEY`).
-3. Merge **`.github/workflows/pr_agent.yml`** to your default branch.
-4. Open a **pull request**. On open / reopen / ready for review you should see the bot publish:
+2. Install/configure the **Qodo Code Review** GitHub App and grant this repository access.
+3. Open a **pull request**. Qodo should publish:
    - a **description** walkthrough (**`/describe`**),
    - a **structured review** (**`/review`**),
    - actionable **code suggestions** (**`/improve`**),
 
-   Comments on the PR (`/review`, `/ask`, `/update_changelog`, etc.) tell the workflow to react to **issue comment** triggers.
+   Comments on the PR (`/review`, `/ask`, `/update_changelog`, etc.) trigger App actions.
 
 Configuration in **`.pr_agent.toml`** biases reviews toward PHP API safety and Next.js App Router pitfalls (env exposure, RSC boundaries, caching).
 
-### Managed Qodo vs self-hosted workflow
+### Hosted App vs self-hosted workflow
 
-Teams often start with **Qodo Git integration / cloud** ([qodo.ai](https://www.qodo.ai/)) for less operational overhead than wiring keys in Actions. This repository uses the **open-source GitHub Action** so you own the demo wiring and can show it alongside the product narrative.
+This repository is configured for **hosted Qodo App mode** (no repository LLM API keys required).  
+If you later want self-hosted behavior, re-add a GitHub Actions workflow and provider secrets.
 
 ## Local run (optional, for demos in the IDE)
 
